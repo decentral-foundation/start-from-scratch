@@ -1,3 +1,34 @@
+# How to build and host the frontend for staing and production
+
+First you may encounter errors when running `npm run build` even if `npm run dev` works. 
+
+* comment out unused variables like `import { ethers } from 'ethers';`
+* Error TS2339: Property 'ethereum' does not exist on type 'Window & typeof globalThis'
+  - The `ethereum` property on `window` is not defined in the TypeScript type definitions by default. You need to extend the global `Window` interface to include `ethereum`.
+  - Fix: Add a declaration for `window.ethereum`. You can create a new file for this or add it at the top of your MetaMaskLogin.tsx file.
+
+
+  Can add file `global.d.ts` in your `src` folder
+
+  ```tsx
+  // src/global.d.ts
+interface Window {
+  ethereum?: any;
+}
+```
+
+Read this page: https://gist.github.com/lingqingmeng/814026293c3313e2eb2c8e1b52b8d6d0
+
+
+# Deploying to production
+
+Moving away from `http-server` and into 
+
+You'll need an **ecosystem.config.js** file for pm2
+
+
+
+
 # Sample Hardhat Project
 
 This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
@@ -106,3 +137,7 @@ npx hardhat compile
 ```
 
 This should resolve the compilation errors. If there are any further issues, please let me know!
+
+### Backlinks
+
+* https://docs.uniswap.org/contracts/v3/guides/local-environment
