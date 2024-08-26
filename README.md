@@ -138,6 +138,66 @@ npx hardhat compile
 
 This should resolve the compilation errors. If there are any further issues, please let me know!
 
+## Pm2 Installation
+
+The provided PM2 configuration is designed to serve a Vite-built TypeScript application using the `serve` package. Here's a breakdown of what each part of the configuration does and why it is necessary:
+
+### Configuration Breakdown
+
+```javascript
+module.exports = {
+  apps: [
+    {
+      name: `vite-app`,
+      script: "serve",
+      env: {
+        PM2_SERVE_PATH: "./dist",
+        PM2_SERVE_PORT: 5173,
+        PM2_SERVE_SPA: "true",
+        NODE_ENV: 'production',
+      },
+    },
+  ],
+};
+```
+
+1. **`name: 'vite-app'`:**
+   - **Purpose**: This sets the name of the PM2 process. The process will be listed under this name when you use PM2 commands like `pm2 list` or `pm2 logs vite-app`.
+   - **Reason**: It helps in identifying and managing the process, especially when running multiple applications with PM2.
+
+2. **`script: 'serve'`:**
+   - **Purpose**: Specifies the command to run. In this case, it’s using the `serve` package to serve the built files.
+   - **Reason**: Since Vite doesn't have a built-in way to serve the production build (which is stored in the `dist` folder), the `serve` package is used to provide a static server for these files.
+
+3. **`env` Block:**
+   - **Purpose**: The `env` block sets environment variables that configure how the `serve` command operates within PM2.
+   - **Reason**: These environment variables are needed to correctly serve the Vite build with PM2.
+
+   - **`PM2_SERVE_PATH: './dist'`**:
+     - **Purpose**: Specifies the path to the directory that should be served. In this case, `./dist` is the directory where the Vite production build outputs the compiled files.
+     - **Reason**: Without specifying this, PM2 wouldn't know which directory to serve, so this is essential for the app to be accessible.
+
+   - **`PM2_SERVE_PORT: 5173`**:
+     - **Purpose**: Sets the port on which the app will be served. Port `5173` is often used as the default development port for Vite, but you can change this to any available port.
+     - **Reason**: Specifying the port ensures that the app is accessible at a known address (e.g., `http://localhost:5173`).
+
+   - **`PM2_SERVE_SPA: 'true'`**:
+     - **Purpose**: Enables Single Page Application (SPA) mode. When set to `true`, all 404 routes will be redirected to `index.html`.
+     - **Reason**: In SPAs, routing is typically handled client-side, and this setting ensures that any route not recognized by the server is passed to the front-end router. This prevents 404 errors when users try to access routes directly.
+
+   - **`NODE_ENV: 'production'`**:
+     - **Purpose**: Sets the environment to `production`. This is a standard environment variable that many tools use to optimize for production.
+     - **Reason**: Ensures that any production-specific optimizations are enabled, and the application runs in a mode optimized for performance and security.
+
+### Why This Configuration Is Needed for Vite TypeScript Dist Builds
+
+- **Serving the Build**: Vite’s production build outputs static files into a `dist` directory. Unlike some frameworks, Vite doesn’t provide a built-in server for serving these files, so you need an external tool like `serve` to host them.
+- **SPA Handling**: Since Vite apps are often SPAs, the `PM2_SERVE_SPA` setting ensures that client-side routing works correctly, preventing issues where users see a 404 error when they refresh or directly access a route.
+- **Production Environment**: The `NODE_ENV: 'production'` setting ensures that the application and any libraries it uses are running in a mode optimized for production.
+
+This PM2 configuration automates the process of serving the Vite production build, handles SPA routing, and ensures the app is optimized for production use.
+
 ### Backlinks
 
 * https://docs.uniswap.org/contracts/v3/guides/local-environment
+

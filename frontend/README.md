@@ -48,3 +48,58 @@ export default tseslint.config({
   },
 })
 ```
+
+
+# Troubleshooting
+
+### On cloud can't run with serve
+
+On GCP, If you run 
+
+```bash
+~/Repos/start-from-scratch/frontend$ npm install --global serve
+
+changed 90 packages in 5s
+
+24 packages are looking for funding
+  run `npm fund` for details
+```
+
+it looks fine but
+
+```bash
+serve dist
+
+Command 'serve' not found, but can be installed with:
+
+snap install serve
+Please ask your administrator.
+```
+
+
+```bash
+npm root -g
+/home/clouduser/.npm/lib/node_modules
+echo 'export PATH=$PATH:$(npm bin -g)' >> ~/.bashrc
+source ~/.bashrc
+```
+
+
+### However this command worked
+
+```
+~/Repos/start-from-scratch/frontend$ ~/.npm/bin/serve dist/
+ ERROR  Cannot copy server address to clipboard: Couldn't find the `xsel` binary and fallback didn't work. On Debian/Ubuntu you can install xsel with: sudo apt install xsel.
+
+   ┌────────────────────────────────────────┐
+   │                                        │
+   │   Serving!                             │
+   │                                        │
+   │   - Local:    http://localhost:3000    │
+   │   - Network:  http://10.128.0.2:3000   │
+   │                                        │
+   └────────────────────────────────────────┘
+```
+
+Navigated to http://34.72.180.180:3000/ and was able to see the metamask frontend loading
+
