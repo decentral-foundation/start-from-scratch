@@ -12,6 +12,7 @@
   "dependencies": {
     "ethers": "^6.13.2",
     "http-server": "^14.1.1",
+    "luciasdk-t3": "^1.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
