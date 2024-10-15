@@ -1,4 +1,23 @@
-# How to build and host the frontend for staing and production
+# How to set up on a new developer environment
+
+* First you'll run git clone 
+* Then you'll need to run `npm install --save-dev hardhat`
+  - Check Hardhat configuration: Ensure the project has a hardhat.config.js or hardhat.config.ts file, which is the standard configuration file for Hardhat projects. If it’s missing, you may need to initialize Hardhat:
+* Then you'll need to run on localhost `npx hardhat node`
+  - After this the goal is to get `npx hardhat test` working. If its not running the test, you'll need to specify the exact directory location. `npx hardhat test ./test/SimpleSwap.test.ts --network localhost`
+* Then you'll get HH19 errors, unless you specify Chai to be exactly version `4.3.7` because otherwise its treated as a module
+
+
+
+
+## Key articles
+
+First understand this
+
+1. https://docs.ethers.org/v6/migrating/#migrate-contracts
+2. See the most reecent commits that migrated over depreciated methods
+
+## How to build and host the frontend for staing and production
 
 First you may encounter errors when running `npm run build` even if `npm run dev` works. 
 

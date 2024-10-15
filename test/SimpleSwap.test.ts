@@ -33,12 +33,13 @@ describe('SimpleSwap', function () {
 
   it('Should swap WETH for DAI', async function () {
     // Arrange
-    const amountIn = ethers.utils.parseEther('1.0');
+    const amountIn = ethers.parseEther('1.0');
     // Assuming the mock router returns the same amount as output for simplicity
     const mockAmountOut = amountIn; 
 
     // Transfer WETH from addr1 to the SimpleSwap contract
     // For testing, you should use mock ERC20 tokens or a local testnet setup
+    console.log("swapRouter in it: ",swapRouter);
     await swapRouter.connect(addr1).transfer(simpleSwap.address, amountIn);
 
     // Approve the SimpleSwap contract to spend WETH
