@@ -1,27 +1,31 @@
-import { expect } from 'chai';
-import { ethers } from 'hardhat';
-import { Signer, Contract, ContractFactory } from 'ethers';
-import { beforeEach } from 'mocha';
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const { beforeEach } = require('mocha');
 
 describe('SimpleSwap', function () {
-  let swapRouter: Contract;
-  let simpleSwap: Contract;
-  let owner: Signer;
-  let addr1: Signer;
+  let swapRouter;
+  let simpleSwap;
+  let owner;
+  let addr1;
 
   beforeEach(async function () {
     // Get the Signers
     [owner, addr1] = await ethers.getSigners();
 
     // Deploy a mock ISwapRouter contract
-    const SwapRouterFactory: ContractFactory = await ethers.getContractFactory('MockSwapRouter');
+    const SwapRouterFactory = await ethers.getContractFactory('MockSwapRouter');
+    console.log('SwapRouterFactory:', SwapRouterFactory);  // Should log a valid factory object
+
     swapRouter = await SwapRouterFactory.deploy();
-    await swapRouter.deployed();
+
+    await swapRouter.waitForDeployment();
+    await waitForOneSecond();
+    console.log('MockSwapRouter deployed:', await swapRouter.getAddress());
 
     // Deploy the SimpleSwap contract
-    const SimpleSwapFactory: ContractFactory = await ethers.getContractFactory('SimpleSwap');
-    simpleSwap = await SimpleSwapFactory.deploy(swapRouter.address);
-    await simpleSwap.deployed();
+    const SimpleSwapFactory = await ethers.getContractFactory('SimpleSwap');
+    simpleSwap = await SimpleSwapFactory.deploy(await swapRouter.getAddress());
+    await simpleSwap.waitForDeployment();
 
     // Fund the test accounts with WETH and DAI (mock tokens)
     // You would typically use a mock ERC20 token for testing
@@ -45,10 +49,12 @@ describe('SimpleSwap', function () {
     const receipt = await tx.wait();
 
     // Verify that the swap was successful
-    // Check event logs or final balances to verify the swap
-    // Example: Check the amountOut in the swap result
     expect(await simpleSwap.swapWETHForDAI(amountIn)).to.equal(mockAmountOut);
 
     // Further assertions could include verifying that the expected amount of DAI was received
   });
 });
+
+function waitForOneSecond() {
+  return new Promise(resolve => setTimeout(resolve, 1000));
+}
