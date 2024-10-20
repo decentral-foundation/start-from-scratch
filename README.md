@@ -1,5 +1,14 @@
 # How to set up on a new developer environment
 
+## Install Libraries
+* npm i 
+OR
+* npm install @uniswap/v3-periphery
+
+
+
+## Followup steps
+
 * First you'll run git clone 
 * Then you'll need to run `npm install --save-dev hardhat`
   - Check Hardhat configuration: Ensure the project has a hardhat.config.js or hardhat.config.ts file, which is the standard configuration file for Hardhat projects. If it’s missing, you may need to initialize Hardhat:
