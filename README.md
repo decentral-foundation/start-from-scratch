@@ -1,9 +1,9 @@
 # How to set up on a new developer environment
 
 ## Install Libraries
-* npm i 
+* `npm i `
 OR
-* npm install @uniswap/v3-periphery
+* `npm install @uniswap/v3-periphery`
 
 
 
@@ -17,7 +17,32 @@ OR
 * Then you'll get HH19 errors, unless you specify Chai to be exactly version `4.3.7` because otherwise its treated as a module
 
 
+## Deploying to sepolia
 
+Deploy the contracts:  
+
+`npx hardhat run scripts/deploy.js --network sepolia`
+
+Run the interaction script (you may have to fill in the addresses):
+
+`npx hardhat run scripts/interact.js --network sepolia`
+
+### This script demonstrates how to:
+ 
+* Deposit ETH to get WETH
+* Get DAI from the faucet
+* Approve the DEX to spend tokens
+* Initialize liquidity in the DEX
+* Perform a swap
+* Check token balances
+
+## Deploying to a new network for the first time
+
+```zsh
+npx hardhat verify --network sepolia <WETH_ADDRESS>
+npx hardhat verify --network sepolia <DAI_ADDRESS>
+npx hardhat verify --network sepolia <DEX_ADDRESS> <WETH_ADDRESS> <DAI_ADDRESS>
+```
 
 ## Key articles
 
@@ -63,7 +88,7 @@ This project demonstrates a basic Hardhat use case. It comes with a sample contr
 
 Try running some of the following tasks:
 
-```shell
+```zsh
 npx hardhat help
 npx hardhat test
 REPORT_GAS=true npx hardhat test
