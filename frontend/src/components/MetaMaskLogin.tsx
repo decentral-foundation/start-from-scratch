@@ -1,29 +1,39 @@
 import React, { useState } from 'react';
 // import { ethers } from 'ethers';
 
-const MetaMaskLogin: React.FC = () => {
-  const [account, setAccount] = useState<string | null>(null);
+interface MetaMaskLoginProps {
+  onLogin: (account: string) => void;
+}
 
-  const connectMetaMask = async () => {
-    if (window.ethereum) {
+
+import { ethers } from 'ethers';
+
+interface MetaMaskLoginProps {
+  onLogin: (account: string) => void;
+}
+
+const MetaMaskLogin: React.FC<MetaMaskLoginProps> = ({ onLogin }) => {
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
       try {
-        // Request account access
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setAccount(accounts[0]);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        console.log('Connected address:', address);
+        onLogin(address);
       } catch (error) {
-        console.error('User rejected the request.');
+        console.error('Failed to connect wallet:', error);
       }
     } else {
-      console.error('MetaMask is not installed!');
+      console.error('MetaMask is not installed');
     }
   };
 
   return (
-    <div>
-      <button onClick={connectMetaMask}>Connect MetaMask</button>
-      {account && <p>Connected account: {account}</p>}
-    </div>
+    <button onClick={connectWallet}>Connect with MetaMask</button>
   );
 };
+
 
 export default MetaMaskLogin;
