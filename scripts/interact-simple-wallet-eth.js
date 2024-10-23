@@ -7,7 +7,7 @@ async function main() {
 
   // Amount of ETH to deposit and withdraw (0.1 ETH)
   const ethAmount = ethers.parseEther("0.1");
-  const ethAmount2x = ethers.parseEther("0.2");
+//   const ethAmount2x = ethers.parseEther("0.2");
 
   // Get the SimpleWallet contract instance
   const SimpleWallet = await ethers.getContractFactory("SimpleWallet");
@@ -37,8 +37,8 @@ async function main() {
   console.log("SimpleWallet ETH balance after deposit:", ethers.formatEther(balance));
 
   // Withdraw ETH
-  console.log("Withdrawing 0.2 ETH...");
-  const withdrawTx = await simpleWallet.connect(signer).withdrawEther(ethAmount2x);
+  console.log("Withdrawing 0.1 ETH...");
+  const withdrawTx = await simpleWallet.connect(signer).withdrawEther(ethAmount);
   await withdrawTx.wait();
   console.log("ETH withdrawn. Transaction hash:", withdrawTx.hash);
 
