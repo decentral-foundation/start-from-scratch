@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MetaMaskLogin from './components/MetaMaskLogin';
 import TradingInterface from './components/TradingInterface';
+import WalletInteraction from './components/WalletInteraction';
 
 const App: React.FC = () => {
   const [account, setAccount] = useState<string | null>(null);
@@ -21,7 +22,10 @@ const App: React.FC = () => {
       {!account ? (
         <MetaMaskLogin onLogin={handleLogin} />
       ) : (
-        <TradingInterface account={account} />
+        <>
+          <TradingInterface account={account} />
+          <WalletInteraction account={account} />
+        </>
       )}
     </div>
   );
