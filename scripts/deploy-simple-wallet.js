@@ -1,18 +1,34 @@
 const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  console.log("Deploying SimpleWallet contract...");
+  const [deployer] = await ethers.getSigners();
 
-  // Get the contract factory
-  const SimpleWallet = await hre.ethers.getContractFactory("SimpleWallet");
+  console.log("Deploying SimpleWallet with the account:", await deployer.getAddress());
 
-  // Deploy the contract
+  console.log("Account balance:", (await ethers.provider.getBalance(deployer.getAddress())).toString());
+
+  const SimpleWallet = await ethers.getContractFactory("SimpleWallet");
   const simpleWallet = await SimpleWallet.deploy();
 
-  // Wait for the contract to be deployed
   await simpleWallet.waitForDeployment();
 
-  console.log("SimpleWallet deployed to:", await simpleWallet.getAddress());
+  const simpleWalletAddress = await simpleWallet.getAddress();
+  console.log("SimpleWallet deployed to:", simpleWalletAddress);
+
+  // Verify the contract on Etherscan
+  console.log("Waiting for Etherscan to index the contract...");
+  await new Promise(resolve => setTimeout(resolve, 6000)); // Wait for 6 seconds
+
+  try {
+    await hre.run("verify:verify", {
+      address: simpleWalletAddress,
+      constructorArguments: [],
+    });
+    console.log("SimpleWallet verified on Etherscan");
+  } catch (error) {
+    console.error("Error verifying contract:", error);
+  }
 }
 
 // Run the deployment

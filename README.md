@@ -23,9 +23,21 @@ Deploy the contracts:
 
 `npx hardhat run scripts/deploy.js --network sepolia`
 
+Deploy the tokens: 
+
+`npx hardhat run scripts/deploy-tokens-sepolia.js --network sepolia`
+
 Run the interaction script (you may have to fill in the addresses):
 
 `npx hardhat run scripts/interact.js --network sepolia`
+
+Deposit tokens to the wallet:
+
+`npx hardhat run scripts/deposit-tokens-to-wallet.js --network sepolia`
+
+Then run the script for putting tokens into the contract:
+
+`npx hardhat run scripts/deposit-tokens-to-wallet.js --network sepolia`
 
 ### This script demonstrates how to:
  
