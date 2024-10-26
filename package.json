@@ -9,6 +9,7 @@
   "author": "lingqingmeng",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/react": "^18.3.12",
     "chai": "4.3.7",
     "hardhat": "^2.22.13",
     "mocha": "^10.7.3"
