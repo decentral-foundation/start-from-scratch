@@ -39,6 +39,10 @@ Then run the script for putting tokens into the contract:
 
 `npx hardhat run scripts/deposit-tokens-to-wallet.js --network sepolia`
 
+### Import Sepolia deployed addresses: 
+
+`const { SEPOLIA_DAI, SEPOLIA_WETH, SEPOLIA_SIMPLE_WALLET } = require('../deployed');`
+
 ### This script demonstrates how to:
  
 * Deposit ETH to get WETH
