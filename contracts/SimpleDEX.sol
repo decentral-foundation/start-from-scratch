@@ -88,6 +88,13 @@ contract SimpleDEX {
         emit TokensSwappedForEth(tokenAddress, tAmount, ethAmount);
     }
 
+    /**
+     * 1. starting state contract has both ETH and DAI in reserves
+     * 2. Person has ETH and wants to buy DAI
+     *   a. Person sends contract ETH
+     *   b. Person gets back some DAI
+     * 3. The contract ETH balance increases, DAI balance decreases
+     */
     function swapEthForTokens(address tokenAddress, uint256 minTokenAmount) external payable onlyOwner {
         require(msg.value > 0, "Must send ETH to swap");
         
