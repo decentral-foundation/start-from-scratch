@@ -115,4 +115,79 @@ describe("DEX", function () {
             expect(liquidityAfter).to.equal(0);
         });
     });
+
+    describe("Price Calculations", function () {
+        it("Should calculate correct token amount with 0.3% fee", async function () {
+            // Test values with larger reserves
+            const xInput = ethers.parseEther("1");         // 1 ETH input
+            const xReserves = ethers.parseEther("1000");   // 1000 ETH in reserve
+            const yReserves = ethers.parseEther("1000");   // 1000 tokens in reserve
+
+            const output = await dex.price(xInput, xReserves, yReserves);
+
+            // Calculate expected output manually
+            const xInputWithFee = (xInput * BigInt(997));
+            const numerator = xInputWithFee * yReserves;
+            const denominator = (xReserves * BigInt(1000) + xInputWithFee);
+            const expectedOutput = numerator / denominator;
+
+            // Compare the actual and expected outputs
+            expect(output).to.equal(expectedOutput);
+
+            // Verify the output is reasonable 
+            expect(output).to.be.lt(ethers.parseEther("1")); // Should be less than 1 token due to fee
+            expect(output).to.be.gt(ethers.parseEther("0.995")); // Should be more than 0.995 tokens
+        });
+
+        it("Should maintain constant product formula after swap", async function () {
+            const xInput = ethers.parseEther("1");     // 1 ETH input
+            const xReserves = ethers.parseEther("10"); // 10 ETH in reserve
+            const yReserves = ethers.parseEther("100"); // 100 tokens in reserve
+
+            // Calculate constant product before swap
+            const constantProduct = xReserves * yReserves;
+
+            // Get output amount
+            const yOutput = await dex.price(xInput, xReserves, yReserves);
+
+            // Calculate new reserves after swap (including 0.3% fee)
+            const newXReserves = xReserves + (xInput * BigInt(997) / BigInt(1000));
+            const newYReserves = yReserves - yOutput;
+
+            // Calculate new constant product
+            const newConstantProduct = newXReserves * newYReserves;
+
+            // The new constant product should be greater than or equal to the original
+            // due to the 0.3% fee
+            expect(newConstantProduct).to.be.gte(constantProduct);
+        });
+
+        it("Should return 0 for 0 input", async function () {
+            const xReserves = ethers.parseEther("10");
+            const yReserves = ethers.parseEther("100");
+
+            const output = await dex.price(0, xReserves, yReserves);
+            expect(output).to.equal(0);
+        });
+
+        it("Should handle large and small numbers correctly", async function () {
+            // Test with very small input
+            const smallInput = BigInt(1000); // 0.000000000000001 ETH
+            const output1 = await dex.price(
+                smallInput,
+                ethers.parseEther("10"),
+                ethers.parseEther("100")
+            );
+            expect(output1).to.be.gt(0);
+
+            // Test with very large input
+            const largeInput = ethers.parseEther("1000000");
+            const output2 = await dex.price(
+                largeInput,
+                ethers.parseEther("10"),
+                ethers.parseEther("100")
+            );
+            expect(output2).to.be.lt(ethers.parseEther("100")); // Cannot exceed reserve
+        });
+    });
 }); 
