@@ -49,6 +49,10 @@ contract DEX {
         token = IERC20(token_addr); //specifies the token address that will hook into the interface and be used through the variable 'token'
     }
 
+    function getToken() external view returns (IERC20) {
+        return token;
+    }
+
     /* ========== MUTATIVE FUNCTIONS ========== */
 
     /**
