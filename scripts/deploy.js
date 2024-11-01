@@ -1,24 +1,41 @@
 const hre = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-
-  console.log("Deploying contracts with the account:", deployer.address);
-
-  const WETH = await hre.ethers.getContractFactory("WETH");
-  const weth = await WETH.deploy();
-  await weth.deployed();
-  console.log("WETH deployed to:", weth.address);
-
-  const DAI = await hre.ethers.getContractFactory("DAI");
-  const dai = await DAI.deploy();
-  await dai.deployed();
-  console.log("DAI deployed to:", dai.address);
-
+  // Get the contract factories
+  const Balloons = await hre.ethers.getContractFactory("Balloons");
   const DEX = await hre.ethers.getContractFactory("DEX");
-  const dex = await DEX.deploy(weth.address, dai.address);
-  await dex.deployed();
-  console.log("DEX deployed to:", dex.address);
+
+  // Deploy Balloons contract
+  console.log("Deploying Balloons contract...");
+  const balloons = await Balloons.deploy();
+  await balloons.waitForDeployment();
+  const balloonsAddress = await balloons.getAddress();
+  console.log("Balloons deployed to:", balloonsAddress);
+
+  // Deploy DEX contract with Balloons address
+  console.log("Deploying DEX contract...");
+  const dex = await DEX.deploy(balloonsAddress);
+  await dex.waitForDeployment();
+  const dexAddress = await dex.getAddress();
+  console.log("DEX deployed to:", dexAddress);
+
+  // For testing: approve DEX contract to spend Balloons
+  console.log("Approving DEX contract to spend Balloons...");
+  const approveTx = await balloons.approve(
+    dexAddress, 
+    hre.ethers.parseEther("1000")
+  );
+  await approveTx.wait();
+
+  // Initialize the DEX with some tokens
+  console.log("Initializing DEX with tokens...");
+  const initTx = await dex.init(
+    hre.ethers.parseEther("5"), 
+    { value: hre.ethers.parseEther("5") }
+  );
+  await initTx.wait();
+
+  console.log("Deployment and initialization completed!");
 }
 
 main()

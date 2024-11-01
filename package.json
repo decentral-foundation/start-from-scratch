@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@uniswap/v3-periphery": "^1.4.4",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "solc": "^0.7.6"
   }
 }
