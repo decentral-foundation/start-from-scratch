@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
-import { SEPOLIA_DAI, SEPOLIA_SIMPLE_WALLET } from '../deployed';
+const { ethers } = require('ethers');
+const { SEPOLIA_DAI, SEPOLIA_SIMPLE_WALLET } = require('../deployed');
 
 // ABI snippets we need for testing
 const SIMPLE_WALLET_ABI = [
@@ -17,7 +17,7 @@ const ERC20_ABI = [
 async function testTokenSwap() {
   // Connect to Sepolia using Infura
   const provider = new ethers.JsonRpcProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`);
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   
   // Connect to contracts
   const simpleWallet = new ethers.Contract(
